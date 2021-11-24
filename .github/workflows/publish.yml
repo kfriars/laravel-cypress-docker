@@ -1,0 +1,41 @@
+name: Build and publish docker images
+
+on:
+  push:
+    branches:
+      - master
+
+env:
+  IMAGE: kfriars/laravel-cypress
+
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        include:
+          - tag: 'latest'
+            php: '7.4'
+          - tag: 'stable'
+            php: '7.4'
+          - tag: '7.4'
+            php: '7.4'
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v1 
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push
+        id: docker_build
+        uses: docker/build-push-action@v2
+        with:
+          push: 1
+          context: ${{ matrix.php }}
+          tags: |
+            ${{ env.IMAGE }}:${{ matrix.tag }}
