@@ -39,11 +39,3 @@ jobs:
           context: ${{ matrix.php }}
           tags: |
             ${{ env.IMAGE }}:${{ matrix.tag }}
-
-      - name: Docker Hub Description
-        uses: peter-evans/dockerhub-description@v2
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-          repository: kfriars/laravel-cypress
-          short-description: ${{ github.event.repository.description }}
